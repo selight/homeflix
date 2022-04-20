@@ -23,8 +23,13 @@
         <q-toolbar-title>
 
         </q-toolbar-title>
-        <q-btn flat round dense icon="search" />
-        <q-btn flat round dense icon="person" />
+        <q-input dark dense standout v-model="text" input-class="text-right" class="q-ml-md">
+          <template v-slot:append>
+            <q-icon v-if="text === ''" name="search" />
+            <q-icon v-else name="clear" class="cursor-pointer" @click="text = ''" />
+          </template>
+        </q-input>
+        <q-btn flat round dense icon="person" v-on:click="loginModal=true" />
       </q-toolbar>
       <q-toolbar inset class="xs">
         <div class="row justify-start q-gutter-md text-caption"  >
@@ -44,23 +49,30 @@
       </q-toolbar>
     </q-header>
     <q-page-container>
+      <q-dialog v-model="loginModal">
+        <auth-component></auth-component>
+      </q-dialog>
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent, ref} from 'vue'
+import AuthComponent from "components/AuthComponent.vue";
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
-
+    AuthComponent
   },
 
   setup () {
+    const loginModal = ref(false)
+    const text = ref('')
     return {
-
+        loginModal,
+      text
     }
   }
 })
