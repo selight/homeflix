@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh lpR lFf">
+  <q-layout view="lHh lpr lFf">
     <q-header elevated class="bg-transparent">
       <q-toolbar dense>
         <q-avatar square>
@@ -24,6 +24,23 @@
 
         </q-toolbar-title>
         <q-btn flat round dense icon="search" />
+        <q-btn flat round dense icon="person" />
+      </q-toolbar>
+      <q-toolbar inset class="xs">
+        <div class="row justify-start q-gutter-md text-caption"  >
+          <q-btn-dropdown class="col" flat label="All " size="10px" dense>
+            <q-list class="text-caption">
+              <q-item clickable v-close-popup></q-item></q-list>
+          </q-btn-dropdown>
+          <q-btn-dropdown  class="col" flat  label="movies" size="10px"  dense>
+            <q-list>
+              <q-item clickable v-close-popup></q-item></q-list>
+          </q-btn-dropdown>
+          <q-btn-dropdown  class="col" flat label="Tv shows" size="10px" dense>
+            <q-list>
+              <q-item clickable v-close-popup></q-item></q-list>
+          </q-btn-dropdown>
+        </div>
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -33,7 +50,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'MainLayout',
 
