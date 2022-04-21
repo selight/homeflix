@@ -4,7 +4,7 @@
   <q-input
       ref="inputRef"
       filled
-      v-model="name"
+      v-model="username"
       label="User Name"
       :rules="[val => !!val || 'Field is required']"
   />
@@ -26,35 +26,29 @@
 
 <script>
 import {ref} from "vue";
-import {useQuasar} from "quasar";
+import { useAuthStore } from 'stores/Auth-store'
+import { storeToRefs } from 'pinia'
+
 
 export default {
   name: "AuthComponent",
   setup(){
-    const name = ref(null)
+    const username = ref(null)
     const password = ref(null)
     const accept = ref(false)
-    const $q = useQuasar()
+    const store = useAuthStore()
+    const { login } = store
+
     return{
-      name,
+      username,
       password,
       accept,
       onSubmit () {
-        if (accept.value !== true) {
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: 'You need to accept the license and terms first'
-          })
+        if (accept.value !== true){
+
         }
         else {
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Submitted'
-          })
+          login({username:username.value,password:password.value})
         }
       },
     }
