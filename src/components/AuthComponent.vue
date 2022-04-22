@@ -27,7 +27,6 @@
 <script>
 import {ref} from "vue";
 import { useAuthStore } from 'stores/Auth-store'
-import { storeToRefs } from 'pinia'
 
 
 export default {
