@@ -14,8 +14,8 @@
 		},
   }
     }" aria-label="My Favorite Images">
-    <SplideSlide v-for="(image,i) in list" :key="i">
-      <img alt="movie" style="display: flex; width: 100%; height: 100%" :src="image.img"/>
+    <SplideSlide v-for="(movie,i) in movies" :key="i">
+      <img alt="movie" style="display: flex; width: 100%; height: 100%" :src="movie.poster"/>
     </SplideSlide>
   </Splide>
 </template>
@@ -33,6 +33,9 @@ export default {
   props: {
     height: {
       type: Number,
+    },
+    movies :{
+      type: Array,
     }
   },
   setup() {

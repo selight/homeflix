@@ -94,7 +94,8 @@ module.exports = configure(function (/* ctx */) {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
       config: {
-        dark: true // or Boolean true/false
+        dark: true, // or Boolean true/false
+        notify:{timeout: 500}
       },
 
       // iconSet: 'material-icons', // Quasar icon set
@@ -108,7 +109,10 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify',
+        'Dialog'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
