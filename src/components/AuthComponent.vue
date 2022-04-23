@@ -42,18 +42,17 @@
 </template>
 
 <script>
-import { ref } from "vue";
+  import {ref, watch} from "vue";
 import { useAuthStore } from "stores/Auth-store";
 import useQuasar from "quasar/src/composables/use-quasar";
 
-export default {
+  export default {
   name: "AuthComponent",
   setup() {
     const username = ref("Selam");
     const password = ref("12345678");
     const accept = ref(false);
     const spinner = ref(false);
-    const close = ref(0);
     const store = useAuthStore();
     const $q = useQuasar();
     return {
@@ -61,7 +60,6 @@ export default {
       password,
       accept,
       spinner,
-      close,
       onSubmit() {
         if (accept.value !== true) {
         } else {

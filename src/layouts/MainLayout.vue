@@ -36,17 +36,20 @@
             />
           </template>
         </q-input>
-        <q-btn flat round dense icon="person" v-on:click="store.user ? menus.value=true : store.$state.loginDialog=true ">
+        <q-btn flat round dense icon="person" v-on:click="store.user ? openMenu() : store.$state.loginDialog=true ">
           <q-menu
             fit
             v-model="menus"
-            :model-value="menus"
+            v-if="menus"
             transition-show="jump-down"
             transition-hide="jump-up"
           >
             <q-list style="min-width: 100px">
               <q-item v-on:click="logout" clickable v-close-popup>
                 <q-item-section>Log Out</q-item-section>
+              </q-item>
+              <q-item v-on:click="movieStore.$state.addDialog=true" clickable v-close-popup>
+                <q-item-section>Add Movies</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -72,6 +75,9 @@
       <q-dialog v-model="store.$state.loginDialog">
         <auth-component></auth-component>
       </q-dialog>
+      <q-dialog v-model="movieStore.$state.addDialog">
+        <add-movie-component></add-movie-component>
+      </q-dialog>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -81,22 +87,30 @@
 import { defineComponent, ref } from "vue";
 import AuthComponent from "components/AuthComponent.vue";
 import { useAuthStore } from "stores/Auth-store";
+import {useMovieStore} from "stores/Movie-store";
+import AddMovieComponent from "components/addMovieComponent.vue";
 export default defineComponent({
   name: "MainLayout",
   components: {
+    AddMovieComponent,
     AuthComponent,
   },
 
   setup() {
     const store = useAuthStore();
+    const movieStore = useMovieStore();
     const text = ref("");
     const menus = ref(false);
     return {
       text,
       store,
       menus,
+      movieStore,
         logout() {
         return store.logout();
+      },
+      openMenu(){
+        menus.value=true
       }
     };
   },

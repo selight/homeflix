@@ -15,7 +15,7 @@
   }
     }" aria-label="My Favorite Images">
     <SplideSlide v-for="(movie,i) in movies" :key="i">
-      <img alt="movie" style="display: flex; width: 100%; height: 100%" :src="movie.poster"/>
+      <img alt="movie" style="display: flex; width: 100%; height: 100%" :src="movie.poster" v-on:click="detail(movie.id)"/>
     </SplideSlide>
   </Splide>
 </template>
@@ -23,6 +23,7 @@
 import {Splide, SplideSlide} from '@splidejs/vue-splide';
 
 import '@splidejs/vue-splide/css';
+import {useMovieStore} from "stores/Movie-store";
 
 export default {
   name: "MainCards",
@@ -39,22 +40,11 @@ export default {
     }
   },
   setup() {
-    const list =
-        [{
-          img: 'https://www.joblo.com/wp-content/uploads/2021/07/thor-love-thunder-1.jpg'
-        },
-          {
-            img: 'https://www.joblo.com/wp-content/uploads/2019/12/bobs-burgers-movie.jpg'
-          },
-          {
-            img: 'https://www.joblo.com/wp-content/uploads/2022/03/umma-poster-400x600.jpg'
-          },
-          {
-            img: 'https://www.joblo.com/wp-content/uploads/2018/02/red-notice-poster.jpg'
-          }
-        ]
+   const store = useMovieStore();
     return {
-      list
+      detail(id){
+        store.getMovieDetails(id)
+      }
     };
   },
 }

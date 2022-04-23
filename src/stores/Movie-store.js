@@ -4,6 +4,7 @@ import { api } from 'boot/axios'
 export const useMovieStore = defineStore('movie', {
   state: () => ({
     movie:null,
+    addDialog:false
   }),
   getters: {
     getUser: (state) => state.user,
@@ -16,7 +17,31 @@ export const useMovieStore = defineStore('movie', {
       }).catch((error)=>{
         console.log(error)
       })
+    },
+    async searchMovies(searchTerm){
+      return await api.get('/tmdb?query='+searchTerm).then((response)=>{
+       return response.data.data
+      }).catch((error)=>{
+        console.log(error)
+      })
+    },
+    async addMovie(movie){
+      return  await  api.post('/movies',movie).then((response)=>{
+        console.log(response)
+      }).catch((error)=>{
+        console.log(error)
+      })
+    },
+    async getMyMovies(userId){
+      return await api.get('/movies',movie).then((response)=>{
+        return response.data.data
+      })
+    },
+    async getMovieDetails(id){
+      return await api.get('/tmdb/'+id).then((response)=>{
+        console.log(response)
+        return response.data.data
+      })
     }
-
   }
 })
