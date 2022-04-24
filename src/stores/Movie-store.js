@@ -4,7 +4,8 @@ import { api } from 'boot/axios'
 export const useMovieStore = defineStore('movie', {
   state: () => ({
     movie:null,
-    addDialog:false
+    addDialog:false,
+    detailDialog:false
   }),
   getters: {
     getUser: (state) => state.user,
