@@ -5,7 +5,7 @@
   </q-card>
   </div>
   <Splide :options="{
-      type  : 'loop',
+      type  : 'slide',
       perPage : 4,
       gap:'0.5em',
       heightRatio:height,
