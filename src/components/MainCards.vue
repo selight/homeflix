@@ -1,4 +1,9 @@
 <template>
+  <div class="row q-gutter-md" v-if="movies.length===0">
+  <q-card style=" min-height:150px;" v-for="n in 4" :key="n" class="col">
+  <q-skeleton style="min-height:150px;" />
+  </q-card>
+  </div>
   <Splide :options="{
       type  : 'loop',
       perPage : 4,
@@ -16,7 +21,7 @@
   }
     }" aria-label="My Favorite Images">
     <SplideSlide v-for="(movie,i) in movies" :key="i">
-      <img alt="movie" style="display: flex; width: 100%; height: 100%" :src="movie.poster" v-on:click="detail(movie.id)"/>
+      <img alt="movie" style="display: flex; width: 100%; height: 100%" data-splide-lazy="" :src="movie.poster"  v-on:click="detail(movie.id)"/>
     </SplideSlide>
   </Splide>
   <q-dialog v-model="detailDialog" position="bottom">
