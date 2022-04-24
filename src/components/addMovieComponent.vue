@@ -39,7 +39,7 @@
         type="text"
         class="col"
         filled
-        label="Title"
+        label="Title *"
         v-model="movie.title"
         :rules="[(val) => !!val || 'Field is required']"
         :model-value="movie.title"
@@ -49,7 +49,7 @@
         type="text"
         class="col"
         filled
-        label="Physical Location"
+        label="Physical Location *"
         v-model="movie.physicalLocation"
         :rules="[(val) => !!val || 'Field is required']"
         :model-value="movie.physicalLocation"
@@ -135,7 +135,6 @@ export default defineComponent({
       rating:null,
       poster:null,
       backDrop:null,
-      userId:'625fff6768c8c178680946d7'
     });
     watch(search, (value) => {
       searchMovies(value);
@@ -159,6 +158,7 @@ export default defineComponent({
       filterOptions,
       addMore,
       submit(){
+        delete movie.value.id;
         store.addMovie(movie.value)
       },
       createValue (val, done) {

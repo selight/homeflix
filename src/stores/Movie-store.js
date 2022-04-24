@@ -13,7 +13,6 @@ export const useMovieStore = defineStore('movie', {
   actions: {
     async getMovies(){
       return await api.get('/tmdb').then((response)=>{
-        console.log(response.data.data)
         return response.data.data
       }).catch((error)=>{
         console.log(error)
@@ -33,14 +32,20 @@ export const useMovieStore = defineStore('movie', {
         console.log(error)
       })
     },
-    async getMyMovies(userId){
-      return await api.get('/movies',movie).then((response)=>{
+    async getMyMovies(){
+      return await api.get('/movies').then((response)=>{
+        return response.data.data
+      }).catch((error)=>{
+        console.log(error)
+      })
+    },
+    async searchMyMovies(searchTerm){
+      return await api.get('/movies?query='+searchTerm,searchTerm).then((response)=>{
         return response.data.data
       })
     },
     async getMovieDetails(id){
       return await api.get('/tmdb/'+id).then((response)=>{
-        console.log(response)
         return response.data.data
       })
     }
