@@ -7,18 +7,18 @@
         <q-card-section class="col-5 flex flex-center">
           <q-img
             class="rounded-borders"
-            :src="singleMovie.backdrop"
+            :src="singleMovie.backdrop || singleMovie.poster"
           />
-          <a class="text-primary" :href="singleMovie.trailer">Watch Trailer</a>
         </q-card-section>
         <q-card-section class="q-pt-xs">
           <div class="text-h5 q-mt-sm q-mb-xs">{{singleMovie.title}}
           </div>
-          <div class="text-caption text-grey">{{singleMovie.release_date}}</div>
+          <div class="text-caption text-grey">{{singleMovie.releaseDate}}</div>
           <div class="text-caption">
             {{singleMovie.description}}
           </div>
           <q-badge color="primary" :label="singleMovie.rating" />
+          <a class="text-primary q-ml-md" :href="singleMovie.trailer">Watch Trailer</a>
         </q-card-section>
       </q-card-section>
     </q-card>

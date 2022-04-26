@@ -40,7 +40,7 @@ export const useMovieStore = defineStore('movie', {
       })
     },
     async searchMyMovies(searchTerm){
-      return await api.get('/movies?query='+searchTerm,searchTerm).then((response)=>{
+      return await api.get('/movies?query='+searchTerm).then((response)=>{
         return response.data.data
       })
     },

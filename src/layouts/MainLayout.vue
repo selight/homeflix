@@ -19,11 +19,12 @@
         </div>
         <q-toolbar-title> </q-toolbar-title>
         <q-input
-          dark
           dense
           standout
           v-model="text"
           input-class="text-right"
+          debounce="500"
+          :loading="loadingState"
           class="q-ml-md"
         >
           <template v-slot:append>
@@ -36,6 +37,25 @@
             />
           </template>
         </q-input>
+        <q-menu fit auto-close v-if="menu" v-model="menu">
+          <q-list
+            v-for="(movies, i) in searchResult"
+            :key="i"
+            style="min-width: 100px"
+          >
+            <q-item clickable v-close-popup v-on:click="()=>{this.detailDialog=true;this.singleMovie=movies}">
+              <q-item-section>
+                <q-item-label>{{ movies.title }}</q-item-label>
+                <q-item-label caption>{{ movies.description }}</q-item-label>
+              </q-item-section>
+
+              <q-item-section side top>
+                <q-badge color="primary" :label="movies.rating" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+
         <q-btn flat round dense icon="person" v-on:click="store.user ? openMenu() : store.$state.loginDialog=true ">
           <q-menu
             fit
@@ -80,20 +100,25 @@
       </q-dialog>
       <router-view />
     </q-page-container>
+    <q-dialog v-model="detailDialog" position="bottom">
+      <movie-detail-component :single-movie="singleMovie"></movie-detail-component>
+    </q-dialog>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+  import {defineComponent, ref, watch} from "vue";
 import AuthComponent from "components/AuthComponent.vue";
 import { useAuthStore } from "stores/Auth-store";
 import {useMovieStore} from "stores/Movie-store";
 import AddMovieComponent from "components/addMovieComponent.vue";
+import MovieDetailComponent from "components/movieDetailComponent.vue";
 export default defineComponent({
   name: "MainLayout",
   components: {
     AddMovieComponent,
     AuthComponent,
+    MovieDetailComponent
   },
 
   setup() {
@@ -101,17 +126,37 @@ export default defineComponent({
     const movieStore = useMovieStore();
     const text = ref("");
     const menus = ref(false);
+    const menu = ref(false);
+    const searchResult= ref([]);
+    const loadingState=ref(false)
+    const detailDialog=ref(false);
+    const singleMovie=ref(null)
+    watch(text, async (value) => {
+      loadingState.value = true;
+      await movieStore.searchMyMovies(value).then((movies) => {
+        if(movies.length>0) {
+          searchResult.value = movies.slice(0, 6);
+          loadingState.value = false;
+          menu.value = true;
+        }
+      });
+    });
     return {
       text,
       store,
       menus,
+      menu,
       movieStore,
+      loadingState,
+      searchResult,
+      detailDialog,
+      singleMovie,
         logout() {
         return store.logout();
       },
       openMenu(){
         menus.value=true
-      }
+      },
     };
   },
 });

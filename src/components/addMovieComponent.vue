@@ -22,7 +22,7 @@
             :key="i"
             style="min-width: 100px"
           >
-            <q-item clickable v-close-popup v-on:click="movie = movies">
+            <q-item clickable v-close-popup v-on:click="()=>{this.movie = movies;this.physicalProperties.releaseDate=this.movies.releaseDate}">
               <q-item-section>
                 <q-item-label>{{ movies.title }}</q-item-label>
                 <q-item-label caption>{{ movies.description }}</q-item-label>
@@ -49,47 +49,48 @@
         type="text"
         class="col"
         filled
-        label="Physical Location *"
-        v-model="movie.physicalLocation"
+        autogrow
+        label="Description *"
+        v-model="movie.description"
+        :model-value="movie.description"
         :rules="[(val) => !!val || 'Field is required']"
-        :model-value="movie.physicalLocation"
+      ></q-input>
+      <q-input
+        type="text"
+        class="col"
+        filled
+        label="Physical Location *"
+        v-model="physicalProperties.physicalLocation"
+        :rules="[(val) => !!val || 'Field is required']"
+        :model-value="physicalProperties.physicalLocation"
       >
       </q-input>
       <q-input
         type="text"
         class="col"
         filled
-        label="Physical ID"
-        v-model="movie.physicalID"
-        :model-value="movie.physicalID"
-      >
-      </q-input>
-      <q-input
-        v-if="addMore"
-        label="Release Date"
-        class="col-1"
-        type="date"
-        filled
-        v-model="movie.release_date"
-        :model-value="movie.release_date"
+        autogrow
+        label="Poster *"
+        v-model="movie.poster"
+        :model-value="movie.poster"
         :rules="[(val) => !!val || 'Field is required']"
-      >
-      </q-input>
+        hint="please input the image url"
+      ></q-input>
       <q-input
         v-if="addMore"
         type="text"
-        class="col-1"
+        class="col"
         filled
-        autogrow
-        label="Description"
-        v-model="movie.description"
-        :model-value="movie.description"
-      ></q-input>
+        label="Physical ID"
+        v-model="physicalProperties.physicalId"
+        :model-value="physicalProperties.physicalId"
+      >
+      </q-input>
       <q-select
         v-if="addMore"
         filled
         class="col-1"
-        v-model="movie.storageType"
+        v-model="physicalProperties.storageType"
         use-input
         use-chips
         input-debounce="0"
@@ -99,6 +100,15 @@
         label="Storage Type"
         hint="VHS,DVD.."
       />
+      <q-input
+        v-if="addMore"
+        label="Release Date"
+        class="col-1"
+        filled
+        v-model="physicalProperties.releaseDate"
+        :model-value="physicalProperties.releaseDate"
+      >
+      </q-input>
       <!--      Buttons-->
       <div class="row justify-between">
         <q-btn icon="add" v-if="!addMore" label="Add More Info" color="accent" v-on:click="addMore=true"> </q-btn>
@@ -127,15 +137,17 @@ export default defineComponent({
     const movie = ref({
       title: "",
       description: "",
-      release_date: Date.now(),
-      physicalLocation:"",
-      physicalID:"",
-      storageType:null,
       genre:[],
       rating:null,
       poster:null,
-      backDrop:null,
+      backDrop: ''
     });
+    const physicalProperties = ref({
+      physicalLocation:"",
+      physicalId:"",
+      storageType:null,
+      releaseDate: '',
+    })
     watch(search, (value) => {
       searchMovies(value);
     });
@@ -148,6 +160,7 @@ export default defineComponent({
         menu.value = true;
       });
     };
+    setTimeout()
     return {
       search,
       store,
@@ -157,9 +170,13 @@ export default defineComponent({
       movie,
       filterOptions,
       addMore,
+      physicalProperties,
       submit(){
         delete movie.value.id;
-        store.addMovie(movie.value)
+        delete movie.value.release_date;
+        delete movie.value.backdrop;
+        let userMovies = {...movie.value, ...physicalProperties.value};
+        store.addMovie(userMovies)
       },
       createValue (val, done) {
         if (val.length > 0) {
