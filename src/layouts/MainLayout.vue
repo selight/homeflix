@@ -10,7 +10,7 @@
           <q-btn-dropdown class="col" flat label="All " dense>
             <q-list> <q-item clickable v-close-popup></q-item></q-list>
           </q-btn-dropdown>
-          <q-btn-dropdown class="col" flat label="movies" dense>
+          <q-btn-dropdown class="col" flat label="My movies" dense>
             <q-list> <q-item clickable v-close-popup></q-item></q-list>
           </q-btn-dropdown>
         </div>
@@ -87,7 +87,7 @@
               <q-item clickable v-close-popup></q-item
             ></q-list>
           </q-btn-dropdown>
-          <q-btn-dropdown class="col" flat label="movies" size="10px" dense>
+          <q-btn-dropdown class="col" flat label="My Movies" size="10px" dense>
             <q-list> <q-item clickable v-close-popup></q-item></q-list>
           </q-btn-dropdown>
         </div>
