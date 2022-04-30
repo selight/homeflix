@@ -49,9 +49,9 @@ export default defineComponent({
   },
   created() {
     let movieStore = useMovieStore();
+    movieStore.$state.edit=false;
       movieStore.getMyMovies().then((result) => {
         if(result.length===0){
-          console.log('e')
           this.newUser=true
         }
         else {

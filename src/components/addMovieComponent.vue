@@ -156,11 +156,8 @@ export default defineComponent({
     const addMore = ref(false);
     const movie = ref(movieStore.$state.movie);
     const spinner = ref(false);
-    const physicalLocation=computed(()=>physicalProperties.value.physicalLocation || movie.value.physicalLocation)
-    const physicalId=computed(()=>physicalProperties.value.physicalId || movie.value.physicalId)
-    const storageType=computed(()=>physicalProperties.value.storageType || movie.value.storageType)
     const physicalProperties = ref({
-      physicalLocation: movie.value.physicalLocation,
+      physicalLocation: movie.value.physicalLocation ||'N/A',
       physicalId: movie.value.physicalId,
       storageType:  movie.value.storageType,
       tmdbId: "",
