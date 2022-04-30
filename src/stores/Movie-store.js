@@ -12,6 +12,7 @@ export const useMovieStore = defineStore('movie', {
       backDrop: '',
       release_date:''
     },
+    categories:[],
     addDialog:false,
     detailDialog:false,
     search:'',

@@ -3,7 +3,7 @@
     <p class="text-h6 col-1 q-my-none">Only on Homeflix</p>
     <main-cards :movies="movies"></main-cards>
     <div class="column q-gutter-xs" v-for="(cat,i) in categories" :key="i">
-    <p class="text-subtitle1 col-1">{{cat}} Movies</p>
+    <p :id="cat" class="text-subtitle1 col-1">{{cat}} Movies</p>
     <main-cards :movies="getByCategory(cat)"></main-cards>
     </div>
   </q-page>
@@ -61,6 +61,7 @@ export default defineComponent({
               this.categories.push(movie.genre[0])
             }
           })
+          movieStore.$state.categories=this.categories;
         }
       });
   }

@@ -6,13 +6,16 @@
           <img alt="homeflix" src="../assets/netflix.png" />
         </q-avatar>
         <q-space />
-        <div class="row justify-evenly q-gutter-md gt-xs">
-          <q-btn-dropdown class="col" flat label="All " dense>
-            <q-list> <q-item clickable v-close-popup></q-item></q-list>
-          </q-btn-dropdown>
-          <q-btn-dropdown class="col" flat label="My movies" dense>
-            <q-list> <q-item clickable v-close-popup></q-item></q-list>
-          </q-btn-dropdown>
+        <div class="row justify-evenly q-gutter-lg gt-xs" >
+          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[0]">
+            <span>{{movieStore.categories[0]}}</span>
+          </router-link>
+          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[1]">
+            {{movieStore.categories[1]}}
+          </router-link>
+          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[2]">
+            {{movieStore.categories[2]}}
+          </router-link>
         </div>
         <q-toolbar-title> </q-toolbar-title>
         <q-input
@@ -82,14 +85,15 @@
       </q-toolbar>
       <q-toolbar inset class="xs">
         <div class="row justify-start q-gutter-md text-caption">
-          <q-btn-dropdown class="col" flat label="All" size="10px" dense>
-            <q-list class="text-caption">
-              <q-item clickable v-close-popup></q-item
-            ></q-list>
-          </q-btn-dropdown>
-          <q-btn-dropdown class="col" flat label="My Movies" size="10px" dense>
-            <q-list> <q-item clickable v-close-popup></q-item></q-list>
-          </q-btn-dropdown>
+          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[0]">
+            {{movieStore.categories[0]}}
+          </router-link>
+          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[1]">
+            {{movieStore.categories[1]}}
+          </router-link>
+          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[2]">
+            {{movieStore.categories[2]}}
+          </router-link>
         </div>
       </q-toolbar>
     </q-header>
