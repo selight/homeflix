@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
     token: localStorage.getItem("token"),
     user:null,
     loginDialog:false,
+    isAuth:false,
   }),
   getters: {
     getUser: (state) => state.user,
@@ -26,6 +27,16 @@ export const useAuthStore = defineStore('auth', {
 
         })
     },
+    async register(form) {
+      return await api.post('/auth/register', form,)
+        .then(response => {
+          return response.data.data
+        }).catch((error)=>{
+          if(error.status===400){
+            console.log('err','jj')
+          }
+        })
+    },
     async logout() {
         localStorage.removeItem("token");
         this.$reset();
@@ -33,8 +44,11 @@ export const useAuthStore = defineStore('auth', {
     async getAuthUser(){
       api.defaults.headers.common['Authorization']=this.token
       return await api.get('/auth/getUser').then((response)=> {
-         this.user = {id: response.data.user.id, username: response.data.user.username}
-      }).catch((error)=>console.log(error.message))
+          this.user = {id: response.data.user.id, username: response.data.user.username}
+          this.isAuth = response.data.isAuth;
+      }).catch(async (error)=> {
+        await this.logout();
+      })
     }
   },
 });

@@ -1,7 +1,8 @@
 <template>
   <q-card class="q-pa-md" style="width: 800px">
-    <div class="text-h6">Add Your Movies</div>
-    <q-form class="column q-gutter-sm">
+    <div class="text-h6" v-if="!movieStore.$state.edit">Add Your Movies</div>
+    <div class="text-h6" v-if="movieStore.$state.edit">Edit Your Movie</div>
+    <q-form class="column q-gutter-xs">
       <q-input
         v-model="search"
         autofocus
@@ -22,7 +23,7 @@
             :key="i"
             style="min-width: 100px"
           >
-            <q-item clickable v-close-popup v-on:click="()=>{this.movie = movies;this.physicalProperties.releaseDate=this.movies.releaseDate}">
+            <q-item clickable v-close-popup v-on:click="setMovie(movies)">
               <q-item-section>
                 <q-item-label>{{ movies.title }}</q-item-label>
                 <q-item-label caption>{{ movies.description }}</q-item-label>
@@ -35,6 +36,17 @@
           </q-list>
         </q-menu>
       </q-input>
+      <!--      Physical Location-->
+      <q-input
+        type="text"
+        class="col"
+        filled
+        label="Physical Location *"
+        v-model="physicalProperties.physicalLocation"
+        :rules="[(val) => !!val || 'Field is required']"
+        :model-value="physicalProperties.physicalLocation"
+      ></q-input>
+      <!--      Title-->
       <q-input
         type="text"
         class="col"
@@ -45,6 +57,7 @@
         :model-value="movie.title"
       >
       </q-input>
+      <!--      Description-->
       <q-input
         type="text"
         class="col"
@@ -55,16 +68,7 @@
         :model-value="movie.description"
         :rules="[(val) => !!val || 'Field is required']"
       ></q-input>
-      <q-input
-        type="text"
-        class="col"
-        filled
-        label="Physical Location *"
-        v-model="physicalProperties.physicalLocation"
-        :rules="[(val) => !!val || 'Field is required']"
-        :model-value="physicalProperties.physicalLocation"
-      >
-      </q-input>
+      <!--      Poster-->
       <q-input
         type="text"
         class="col"
@@ -73,9 +77,9 @@
         label="Poster *"
         v-model="movie.poster"
         :model-value="movie.poster"
-        :rules="[(val) => !!val || 'Field is required']"
-        hint="please input the image url"
+        readonly
       ></q-input>
+      <!--      Add more Section-->
       <q-input
         v-if="addMore"
         type="text"
@@ -83,7 +87,7 @@
         filled
         label="Physical ID"
         v-model="physicalProperties.physicalId"
-        :model-value="physicalProperties.physicalId"
+        :model-value="physicalProperties.physicalId "
       >
       </q-input>
       <q-select
@@ -105,103 +109,191 @@
         label="Release Date"
         class="col-1"
         filled
-        v-model="physicalProperties.releaseDate"
-        :model-value="physicalProperties.releaseDate"
+        v-model="movie.release_date"
+        :model-value="movie.release_date"
       >
       </q-input>
       <!--      Buttons-->
       <div class="row justify-between">
-        <q-btn icon="add" v-if="!addMore" label="Add More Info" color="accent" v-on:click="addMore=true"> </q-btn>
-        <q-btn label="Submit" color="primary" v-on:click="submit"> </q-btn>
+        <q-btn
+          icon="add"
+          v-if="!addMore"
+          label="Add More Info"
+          color="accent"
+          v-on:click="addMore = true"
+        >
+        </q-btn>
+        <q-btn
+          :label="movieStore.$state.edit ? 'Update' : 'Submit'"
+          color="primary"
+          v-on:click="submit"
+          :loading="spinner"
+        >
+          <template v-slot:loading> <q-spinner color="white" /> </template>
+        </q-btn>
       </div>
     </q-form>
   </q-card>
 </template>
 
 <script>
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref, watch, computed } from "vue";
 import { useMovieStore } from "stores/Movie-store";
-const storageTypeOptions = [
-  'VHS', 'DVD', 'BlueRay'
-]
+import useQuasar from "quasar/src/composables/use-quasar";
+const storageTypeOptions = ["VHS", "DVD", "BlueRay"];
 
 export default defineComponent({
   name: "addMovieComponent",
   setup() {
-    const search = ref("");
-    const store = useMovieStore();
+    const movieStore = useMovieStore();
+    const search = ref(movieStore.$state.search);
+    const $q = useQuasar();
+    const edit = ref(movieStore.$state.edit);
+    const id = ref(null);
     const searchResult = ref([]);
     const menu = ref(false);
     const loadingState = ref(false);
-    const addMore = ref(false)
-    const movie = ref({
-      title: "",
-      description: "",
-      genre:[],
-      rating:null,
-      poster:null,
-      backDrop: ''
-    });
+    const addMore = ref(false);
+    const movie = ref(movieStore.$state.movie);
+    const spinner = ref(false);
+    const physicalLocation=computed(()=>physicalProperties.value.physicalLocation || movie.value.physicalLocation)
+    const physicalId=computed(()=>physicalProperties.value.physicalId || movie.value.physicalId)
+    const storageType=computed(()=>physicalProperties.value.storageType || movie.value.storageType)
     const physicalProperties = ref({
-      physicalLocation:"",
-      physicalId:"",
-      storageType:null,
-      releaseDate: '',
-    })
+      physicalLocation: movie.value.physicalLocation,
+      physicalId: movie.value.physicalId,
+      storageType:  movie.value.storageType,
+      tmdbId: "",
+    });
     watch(search, (value) => {
       searchMovies(value);
     });
-    const filterOptions = ref(storageTypeOptions)
+    const filterOptions = ref(storageTypeOptions);
     const searchMovies = (value) => {
       loadingState.value = true;
-      store.searchMovies(value).then((movies) => {
+      movieStore.searchMovies(value).then((movies) => {
         searchResult.value = movies.slice(0, 6);
         loadingState.value = false;
         menu.value = true;
       });
     };
-    setTimeout()
     return {
       search,
-      store,
+      movieStore,
       menu,
+      edit,
+      id,
       searchResult,
       loadingState,
       movie,
       filterOptions,
       addMore,
       physicalProperties,
-      submit(){
-        delete movie.value.id;
-        delete movie.value.release_date;
-        delete movie.value.backdrop;
-        let userMovies = {...movie.value, ...physicalProperties.value};
-        store.addMovie(userMovies)
+      spinner,
+      submit() {
+        spinner.value = true;
+        if (movieStore.$state.edit) {
+          let ids = null;
+          if (movieStore.$state.fromHome) {
+            ids = movie.value._id;
+            physicalProperties.value.tmdbId = movie.value.tmdbId;
+          } else {
+            ids = id.value;
+          }
+          let userMovies = { ...movie.value, ...physicalProperties.value };
+          movieStore
+            .updateMovie({ id: ids, userMovies: userMovies })
+            .then((res) => {
+              if (res) {
+                $q.notify({
+                  type: "positive",
+                  message: "You have successfully updated your movie",
+                  position: "center",
+                });
+                movieStore.$state.addDialog = false;
+                spinner.value = false;
+              }
+            });
+        }
+        else {
+          physicalProperties.value.tmdbId = movie.value.id.toString();
+          delete movie.value.id;
+          let userMovies = { ...movie.value, ...physicalProperties.value };
+          movieStore.addMovie(userMovies).then((res) => {
+            if (res) {
+              $q.notify({
+                type: "positive",
+                message: "You have successfully Added a movie",
+                position: "center",
+              });
+              movieStore.$state.addDialog = false;
+              spinner.value = false;
+              window.location.reload()
+            }
+          });
+        }
       },
-      createValue (val, done) {
+      async setMovie(movies) {
+        await movieStore.getOneMovie(movies.id).then((r) => {
+          if (r.length > 0) {
+            movieStore.$state.edit = true;
+            id.value = r[0]._id;
+            let {
+              title,
+              description,
+              genre,
+              rating,
+              poster,
+              backDrop,
+              release_date,
+              physicalLocation,
+              physicalId,
+              storageType,
+              tmdbId,
+            } = r[0];
+            physicalProperties.value = {
+              physicalLocation,
+              physicalId,
+              storageType,
+              tmdbId,
+            };
+            movie.value = {
+              title,
+              description,
+              genre,
+              rating,
+              poster,
+              backDrop,
+              release_date,
+            };
+          } else {
+            movie.value = movies;
+          }
+        });
+      },
+      createValue(val, done) {
         if (val.length > 0) {
           if (!storageTypeOptions.includes(val)) {
-            storageTypeOptions.push(val)
+            storageTypeOptions.push(val);
           }
-          done(val, 'toggle')
+          done(val, "toggle");
         }
       },
 
-      filterFn (val, update) {
+      filterFn(val, update) {
         update(() => {
-          if (val === '') {
-            filterOptions.value = storageTypeOptions
-          }
-          else {
-            const needle = val.toLowerCase()
+          if (val === "") {
+            filterOptions.value = storageTypeOptions;
+          } else {
+            const needle = val.toLowerCase();
             filterOptions.value = storageTypeOptions.filter(
-              v => v.toLowerCase().indexOf(needle) > -1
-            )
+              (v) => v.toLowerCase().indexOf(needle) > -1
+            );
           }
-        })
-      }
-    }
-    },
+        });
+      },
+    };
+  },
 });
 </script>
 

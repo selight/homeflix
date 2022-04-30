@@ -8,10 +8,9 @@ import {useAuthStore} from "stores/Auth-store";
 
 export default defineComponent({
   name: 'App',
-  created() {
+  async created() {
     let store = useAuthStore();
-    store.getAuthUser();
-    console.log('dsf',store.$state.user)
+    await store.getAuthUser();
   }
 })
 </script>
