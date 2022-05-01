@@ -44,7 +44,7 @@ import { Splide, SplideSlide } from "@splidejs/vue-splide";
 
 import "@splidejs/vue-splide/css";
 import { useMovieStore } from "stores/Movie-store";
-import { ref} from "vue";
+import { ref } from "vue";
 import MovieDetailComponent from "components/movieDetailComponent.vue";
 
 export default {
