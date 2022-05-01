@@ -63,7 +63,7 @@
                 <router-link class="text-white" to="/login"
                   >Forgot password?</router-link
                 >
-                <a class="text-white" v-on:click="setLabel()">
+                <a class="text-white cursor-pointer" v-on:click="setLabel()">
                   {{ getLabel() }}
                 </a>
               </div>
@@ -110,22 +110,16 @@ export default {
               .then(() => {
                 spinner.value = false;
                 $q.notify({
-                  type: "positive",
-                  message: "You have successfully logged In",
+                  type: store.error ? "negative" : "positive",
+                  message: store.message,
                   position: "center",
                 });
-                router.push({
-                  name: "Home",
-                  query: {
-                    ...route.query,
-                  },
-                });
-              })
-              .catch((error) => {
-                if (error) {
-                  $q.notify({
-                    type: "negative",
-                    message: error.message,
+                if (!store.error) {
+                  router.push({
+                    name: "Home",
+                    query: {
+                      ...route.query,
+                    },
                   });
                 }
               });
@@ -136,8 +130,8 @@ export default {
               .then(() => {
                 spinner.value = false;
                 $q.notify({
-                  type: "positive",
-                  message: "You have successfully Registered.",
+                  type: store.error ? "negative" : "positive",
+                  message: store.message,
                   position: "center",
                 });
                 label.value = "Login";
@@ -152,14 +146,13 @@ export default {
           return "Register";
         }
       },
-      setLabel(){
+      setLabel() {
         if (label.value === "Login") {
-          label.value="Register"
+          label.value = "Register";
         } else {
-         label.value="Login"
+          label.value = "Login";
         }
-      }
-
+      },
     };
   },
 };
