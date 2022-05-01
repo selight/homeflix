@@ -2,8 +2,8 @@
   <q-page v-if="!newUser" class="column q-gutter-sm q-pa-md">
     <p class="text-h6 col-1 q-my-none">Only on Homeflix</p>
     <main-cards :movies="movies"></main-cards>
-    <div class="column q-gutter-xs" v-for="(cat,i) in categories" :key="i">
-    <p :id="cat" class="text-subtitle1 col-1">{{cat}} Movies</p>
+    <div v-for="(cat,i) in categories" :key="i">
+    <p :id="cat" class="text-subtitle1">{{cat}} Movies</p>
     <main-cards :movies="getByCategory(cat)"></main-cards>
     </div>
   </q-page>
@@ -57,7 +57,7 @@ export default defineComponent({
         else {
           this.movies = result
           result.forEach((movie) => {
-            if (!this.categories.includes(movie.genre[0])) {
+            if (!this.categories.includes(movie.genre[0]) && movie.genre.length!==0) {
               this.categories.push(movie.genre[0])
             }
           })

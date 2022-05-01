@@ -60,9 +60,6 @@
                 </template>
               </q-btn>
               <div class="text-center q-mt-sm q-gutter-lg">
-                <router-link class="text-white" to="/login"
-                  >Forgot password?</router-link
-                >
                 <a class="text-white cursor-pointer" v-on:click="setLabel()">
                   {{ getLabel() }}
                 </a>

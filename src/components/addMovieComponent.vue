@@ -6,7 +6,7 @@
       <q-input
         v-model="search"
         autofocus
-        debounce="500"
+        debounce="1000"
         :loading="loadingState"
         type="search"
         hint="Search your movies from imdb"

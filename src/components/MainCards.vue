@@ -9,7 +9,7 @@
       type: 'slide',
       perPage: 4,
       gap: '0.5em',
-      heightRatio: height,
+      heightRatio: 0.4,
       perMove: 1,
       arrows: false,
       pagination: false,
@@ -20,8 +20,8 @@
       <div>
         <img
           alt="movie"
-          style="display: flex; width: 100%; height: 100%"
           data-splide-lazy="~assets/netflix.png"
+          style="display: flex; width: 100%; height: 100%"
           :src="movie.poster"
           v-on:click="detail(movie._id, i)"
         />
@@ -67,6 +67,7 @@ export default {
     const detailDialog = ref(false);
     const singleMovie = ref({});
     const spinners = ref(Array(20).fill(false));
+    const setWidth = ref("");
     //TODO make the number of spinners based on the movies length. i.e deep watch isn't working
     // watch(
     //   () => props.movies,
@@ -79,6 +80,7 @@ export default {
       detailDialog,
       singleMovie,
       spinners,
+      setWidth,
       detail(id, i) {
         spinners.value.splice(i, 1, true);
         movieStore.getMyMovieDetails(id).then((movie) => {
@@ -88,6 +90,11 @@ export default {
         });
       },
     };
+  },
+  created() {
+    if (this.movies.length < 2) {
+      this.setWidth = "width:100px;";
+    }
   },
 };
 </script>

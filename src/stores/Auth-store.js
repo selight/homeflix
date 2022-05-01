@@ -35,6 +35,8 @@ export const useAuthStore = defineStore("auth", {
       return await api
         .post("/auth/register", form)
         .then((response) => {
+          this.error = false;
+          this.message = response.data.message;
           return response.data.data;
         })
         .catch((error) => {
