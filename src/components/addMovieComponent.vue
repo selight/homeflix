@@ -4,6 +4,7 @@
     <div class="text-h6" v-if="movieStore.$state.edit">Edit Your Movie</div>
     <q-form class="column q-gutter-xs">
       <q-input
+        v-if="!movieStore.$state.edit"
         v-model="search"
         autofocus
         debounce="1000"
