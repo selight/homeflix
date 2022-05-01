@@ -87,7 +87,7 @@
         filled
         label="Physical ID"
         v-model="physicalProperties.physicalId"
-        :model-value="physicalProperties.physicalId "
+        :model-value="physicalProperties.physicalId"
       >
       </q-input>
       <q-select
@@ -157,9 +157,9 @@ export default defineComponent({
     const movie = ref(movieStore.$state.movie);
     const spinner = ref(false);
     const physicalProperties = ref({
-      physicalLocation: movie.value.physicalLocation ||'N/A',
+      physicalLocation: movie.value.physicalLocation || "N/A",
       physicalId: movie.value.physicalId,
-      storageType:  movie.value.storageType,
+      storageType: movie.value.storageType,
       tmdbId: "",
     });
     watch(search, (value) => {
@@ -211,8 +211,7 @@ export default defineComponent({
                 spinner.value = false;
               }
             });
-        }
-        else {
+        } else {
           physicalProperties.value.tmdbId = movie.value.id.toString();
           delete movie.value.id;
           let userMovies = { ...movie.value, ...physicalProperties.value };
@@ -225,7 +224,7 @@ export default defineComponent({
               });
               movieStore.$state.addDialog = false;
               spinner.value = false;
-              window.location.reload()
+              window.location.reload();
             }
           });
         }
