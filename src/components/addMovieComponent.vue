@@ -13,7 +13,7 @@
         hint="Search your movies from imdb"
         :model-value="search"
         label="Search"
-        class="col"
+        class="col text-h6"
       >
         <template v-slot:append>
           <q-icon name="search" />
@@ -29,13 +29,31 @@
                 <q-item-label>{{ movies.title }}</q-item-label>
                 <q-item-label caption>{{ movies.description }}</q-item-label>
               </q-item-section>
-
               <q-item-section side top>
                 <q-badge color="primary" :label="movies.rating" />
               </q-item-section>
             </q-item>
           </q-list>
         </q-menu>
+      </q-input>
+      <div class="col-1 text-center" v-if="movie.poster">
+        <q-img
+          :src="movie.poster"
+          style="height: 150px; max-width: 150px"
+        ></q-img>
+      </div>
+      <!--      Title-->
+      <q-input
+        type="text"
+        class="col"
+        dense
+        filled
+        readonly
+        label="Title *"
+        v-model="movie.title"
+        :rules="[(val) => !!val || 'Field is required']"
+        :model-value="movie.title"
+      >
       </q-input>
       <!--      Physical Location-->
       <q-input
@@ -47,42 +65,7 @@
         :rules="[(val) => !!val || 'Field is required']"
         :model-value="physicalProperties.physicalLocation"
       ></q-input>
-      <!--      Title-->
       <q-input
-        type="text"
-        class="col"
-        filled
-        label="Title *"
-        v-model="movie.title"
-        :rules="[(val) => !!val || 'Field is required']"
-        :model-value="movie.title"
-      >
-      </q-input>
-      <!--      Description-->
-      <q-input
-        type="text"
-        class="col"
-        filled
-        autogrow
-        label="Description *"
-        v-model="movie.description"
-        :model-value="movie.description"
-        :rules="[(val) => !!val || 'Field is required']"
-      ></q-input>
-      <!--      Poster-->
-      <q-input
-        type="text"
-        class="col"
-        filled
-        autogrow
-        label="Poster *"
-        v-model="movie.poster"
-        :model-value="movie.poster"
-        readonly
-      ></q-input>
-      <!--      Add more Section-->
-      <q-input
-        v-if="addMore"
         type="text"
         class="col"
         filled
@@ -91,44 +74,25 @@
         :model-value="physicalProperties.physicalId"
       >
       </q-input>
-      <q-select
-        v-if="addMore"
-        filled
-        class="col-1"
+<label class="text-subtitle1">Storage Type: {{physicalProperties.storageType}}
+      <q-btn-toggle
         v-model="physicalProperties.storageType"
-        use-input
-        use-chips
-        input-debounce="0"
-        @new-value="createValue"
+        no-caps
+        spread
+        glossy
+        toggle-color="primary"
         :options="filterOptions"
-        @filter="filterFn"
-        label="Storage Type"
-        hint="VHS,DVD.."
       />
-      <q-input
-        v-if="addMore"
-        label="Release Date"
-        class="col-1"
-        filled
-        v-model="movie.release_date"
-        :model-value="movie.release_date"
-      >
-      </q-input>
+</label>
       <!--      Buttons-->
-      <div class="row justify-between">
-        <q-btn
-          icon="add"
-          v-if="!addMore"
-          label="Add More Info"
-          color="accent"
-          v-on:click="addMore = true"
-        >
-        </q-btn>
+      <div class="row justify-center q-pt-sm">
         <q-btn
           :label="movieStore.$state.edit ? 'Update' : 'Submit'"
           color="primary"
+          size="lg"
           v-on:click="submit"
           :loading="spinner"
+          :disable="!(physicalProperties.physicalLocation && movie.title)"
         >
           <template v-slot:loading> <q-spinner color="white" /> </template>
         </q-btn>
@@ -138,10 +102,15 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, computed } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { useMovieStore } from "stores/Movie-store";
 import useQuasar from "quasar/src/composables/use-quasar";
-const storageTypeOptions = ["VHS", "DVD", "BlueRay"];
+const storageTypeOptions = [
+  { label: "VHS", value: "VHS" },
+  { label: "DVD", value: "DVD" },
+  { label: "BlueRay", value: "BlueRay" },
+  { label: "Other", value: "Other" },
+];
 
 export default defineComponent({
   name: "addMovieComponent",
@@ -158,7 +127,7 @@ export default defineComponent({
     const movie = ref(movieStore.$state.movie);
     const spinner = ref(false);
     const physicalProperties = ref({
-      physicalLocation: movie.value.physicalLocation || "N/A",
+      physicalLocation: movie.value.physicalLocation || null,
       physicalId: movie.value.physicalId,
       storageType: movie.value.storageType,
       tmdbId: "",
@@ -265,27 +234,6 @@ export default defineComponent({
             };
           } else {
             movie.value = movies;
-          }
-        });
-      },
-      createValue(val, done) {
-        if (val.length > 0) {
-          if (!storageTypeOptions.includes(val)) {
-            storageTypeOptions.push(val);
-          }
-          done(val, "toggle");
-        }
-      },
-
-      filterFn(val, update) {
-        update(() => {
-          if (val === "") {
-            filterOptions.value = storageTypeOptions;
-          } else {
-            const needle = val.toLowerCase();
-            filterOptions.value = storageTypeOptions.filter(
-              (v) => v.toLowerCase().indexOf(needle) > -1
-            );
           }
         });
       },

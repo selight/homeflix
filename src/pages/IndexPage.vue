@@ -1,6 +1,6 @@
 <template>
   <q-page v-if="!newUser" class="column q-gutter-sm q-pa-md">
-    <p class="text-h6 col-1 q-my-none">Only on Homeflix</p>
+    <p class="text-h6 col-1 q-my-none">My Homeflix</p>
     <main-cards :movies="movies"></main-cards>
     <div v-for="(cat, i) in categories" :key="i">
       <p :id="cat" class="text-subtitle1">{{ cat }} Movies</p>

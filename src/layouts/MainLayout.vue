@@ -83,7 +83,7 @@
           </q-menu>
         </q-btn>
       </q-toolbar>
-      <q-toolbar inset class="xs">
+      <q-toolbar v-if="movieStore.categories.length" inset class="xs">
         <div class="row justify-start q-gutter-md text-caption">
           <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[0]">
             {{movieStore.categories[0]}}
