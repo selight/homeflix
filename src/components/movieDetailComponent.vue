@@ -29,7 +29,7 @@
             class="q-py-0 q-my-0"
             color="positive text-caption"
             v-close-popup
-            :to="singleMovie.trailer || 'https://youtube.com'"
+            :href="singleMovie.trailer || 'https://youtube.com'"
             >Trailer</q-btn
           >
           <q-btn
