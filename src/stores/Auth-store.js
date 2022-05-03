@@ -62,6 +62,7 @@ export const useAuthStore = defineStore("auth", {
         })
         .catch(async (error) => {
           await this.logout();
+          throw error
         });
     },
   },

@@ -160,7 +160,7 @@ export default defineComponent({
       detailDialog,
       singleMovie,
       async logout() {
-        await store.logout().then(() => {
+        await store.logout().then((r) => {
           router.push({
             name: "SignIn",
             query: {
@@ -182,6 +182,8 @@ export default defineComponent({
               this.movieStore.$state.addDialog = true;
               this.movieStore.$state.edit=false;
             }
+          }).catch((error)=>{
+            console.log(error.response.data)
           });
       },
     };

@@ -17,6 +17,7 @@ import { defineComponent, ref } from "vue";
 import MainCards from "components/MainCards.vue";
 import { useMovieStore } from "stores/Movie-store";
 import AddMovieComponent from "components/addMovieComponent.vue";
+import {useRoute, useRouter} from "vue-router";
 export default defineComponent({
   name: "IndexPage",
   components: { MainCards, AddMovieComponent },
@@ -27,6 +28,8 @@ export default defineComponent({
     const romanticMovies = ref([]);
     const recommendedMovies = ref([]);
     const animationMovies = ref([]);
+    const router = useRouter();
+    const route = useRoute();
     const newUser = ref(false);
     return {
       height,
@@ -36,6 +39,8 @@ export default defineComponent({
       animationMovies,
       romanticMovies,
       newUser,
+      router,
+      route,
       getByCategory(category) {
         let result = [];
         movies.value.forEach((movie) => {
@@ -65,6 +70,14 @@ export default defineComponent({
         });
         movieStore.$state.categories = this.categories;
       }
+    }).catch((errorStatus)=>{
+      console.log(errorStatus)
+      this.router.push({
+        name: "SignIn",
+        query: {
+          ...this.route.query,
+        },
+      });
     });
   },
 });

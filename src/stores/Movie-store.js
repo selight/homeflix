@@ -27,28 +27,28 @@ export const useMovieStore = defineStore('movie', {
       return await api.get('/tmdb').then((response)=>{
         return response.data.data
       }).catch((error)=>{
-        console.log(error)
+        throw error
       })
     },
     async searchMovies(searchTerm){
       return await api.get('/tmdb?query='+searchTerm).then((response)=>{
        return response.data.data
       }).catch((error)=>{
-        console.log(error)
+        throw error
       })
     },
     async addMovie(movie){
       return  await  api.post('/movies',movie).then((response)=>{
         return response.status
       }).catch((error)=>{
-        console.log(error)
+        throw error
       })
     },
     async getMyMovies(){
       return await api.get('/movies/').then((response)=>{
         return response.data.data
       }).catch((error)=>{
-        console.log(error)
+        throw error
       })
     },
     //get movie detail from tmdb
@@ -56,7 +56,7 @@ export const useMovieStore = defineStore('movie', {
       return await api.get('/movies/details/'+id).then((result)=>{
         return result.data.data
       }).catch((error)=>{
-        console.log(error)
+        return error.response.data.status
       })
     },
     async searchMyMovies(searchTerm){
@@ -75,16 +75,16 @@ export const useMovieStore = defineStore('movie', {
       return  await api.put('/movies/'+data.id,data.userMovies).then((response)=>{
         return response.status
       }).catch((error)=>{
-        console.log(error)
+        return error.response.data.status
       })
     },
     //delete movie
     async deleteMovie(id){
       return  await  api.delete('/movies/'+id).then((response)=>{
-        console.log(response)
         return response.status
       }).catch((error)=>{
-        console.log(error)
+
+        return error.response.data.status
       })
     }
   }
