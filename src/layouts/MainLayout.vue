@@ -1,17 +1,24 @@
 <template>
   <q-layout view="lHh lpr lFf">
-    <q-header class="bg-transparent"
-              style=" backdrop-filter: blur(2px);">
+    <q-header class="bg-transparent" style="backdrop-filter: blur(2px)">
       <q-toolbar dense>
         <q-avatar square>
-          <img alt="homeflix" src="../assets/netflix.png" v-on:click="this.$router.push('/')" />
+          <img
+            alt="homeflix"
+            src="../assets/netflix.png"
+            v-on:click="this.$router.push('/')"
+          />
         </q-avatar>
         <q-space />
-          <div v-for="(cat,i) in movieStore.categories.slice(0,3)" :key="i" class="row justify-evenly text-caption gt-xs">
-            <q-btn flat class="col text-white text-subtitle2"  :to="'#'+cat">
-              {{cat}}
-            </q-btn>
-          </div>
+        <div
+          v-for="(cat, i) in movieStore.categories.slice(0, 3)"
+          :key="i"
+          class="row justify-evenly text-caption gt-xs"
+        >
+          <q-btn flat class="col text-white text-subtitle2" :to="'#' + cat">
+            {{ cat }}
+          </q-btn>
+        </div>
         <q-toolbar-title> </q-toolbar-title>
         <q-input
           dense
@@ -22,7 +29,8 @@
           debounce="500"
           :loading="loadingState"
           class="q-ml-md"
-         :model-value="movieStore.$state.search">
+          :model-value="movieStore.$state.search"
+        >
           <template v-slot:append>
             <q-icon v-if="movieStore.$state.search === ''" name="search" />
             <q-icon
@@ -33,7 +41,13 @@
             />
           </template>
         </q-input>
-        <q-menu fit auto-close v-if="menu" @focus="this.$refs.search.focus()" v-model="menu">
+        <q-menu
+          fit
+          auto-close
+          v-if="menu"
+          @focus="this.$refs.search.focus()"
+          v-model="menu"
+        >
           <q-list
             v-for="(movies, i) in searchResult"
             :key="i"
@@ -76,9 +90,13 @@
         </q-btn>
       </q-toolbar>
       <q-toolbar v-if="movieStore.categories.length" inset class="xs">
-        <div v-for="(cat,i) in movieStore.categories.slice(0,3)" :key="i" class="row justify-evenly text-caption">
-          <q-btn flat class="col text-white text-subtitle2"  :to="'#'+cat">
-            {{cat}}
+        <div
+          v-for="(cat, i) in movieStore.categories.slice(0, 3)"
+          :key="i"
+          class="row justify-evenly text-caption"
+        >
+          <q-btn flat class="col text-white text-subtitle2" :to="'#' + cat">
+            {{ cat }}
           </q-btn>
         </div>
       </q-toolbar>
@@ -98,7 +116,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, computed,nextTick } from "vue";
+import { defineComponent, ref, watch, computed, nextTick } from "vue";
 import { useAuthStore } from "stores/Auth-store";
 import { useMovieStore } from "stores/Movie-store";
 import AddMovieComponent from "components/addMovieComponent.vue";
@@ -117,7 +135,7 @@ export default defineComponent({
     const text = computed(() => movieStore.$state.search);
     const menus = ref(false);
     const menu = ref(false);
-    const search=ref('');
+    const search = ref("");
     const searchResult = ref([]);
     const loadingState = ref(false);
     const detailDialog = ref(false);
@@ -161,25 +179,28 @@ export default defineComponent({
         menus.value = true;
       },
       searchResultClick(movies) {
-          movieStore.getOneMovie(movies.id).then((r) => {
+        movieStore
+          .getOneMovie(movies.id)
+          .then((r) => {
             if (r.length > 0) {
               this.singleMovie = r[0];
               this.detailDialog = true;
             } else {
               this.movieStore.$state.movie = movies;
               this.movieStore.$state.addDialog = true;
-              this.movieStore.$state.edit=false;
+              this.movieStore.$state.edit = false;
             }
-          }).catch((error)=>{
-            console.log(error.response.data)
+          })
+          .catch((error) => {
+            console.log(error.response.data);
           });
       },
     };
   },
-  methods:{
-    searchFocus(){
+  methods: {
+    searchFocus() {
       this.$refs.search.focus();
-    }
-  }
+    },
+  },
 });
 </script>
