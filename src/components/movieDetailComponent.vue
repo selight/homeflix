@@ -37,8 +37,7 @@
             color="blue text-caption"
             v-close-popup
             v-on:click="edit()"
-            >Edit</q-btn
-          >
+            >Edit</q-btn>
           <q-space />
           <q-btn
             class="q-py-0 q-my-0"

@@ -23,7 +23,7 @@ export default route(function (/* { store, ssrContext } */) {
         return {
           el: to.hash,
           behavior: 'smooth',
-          top: 50,
+          top: 100,
         }
       }
     },

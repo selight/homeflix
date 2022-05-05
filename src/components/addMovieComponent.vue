@@ -1,12 +1,12 @@
 <template>
-  <q-card class="q-pa-md" style="width: 800px">
+  <q-card class="q-pa-md" style="width: 100%">
     <div class="text-h6" v-if="!movieStore.$state.edit">Add Your Movies</div>
     <div class="text-h6" v-if="movieStore.$state.edit">Edit Your Movie</div>
     <q-form class="column q-gutter-xs">
       <q-input
         v-if="!movieStore.$state.edit"
         v-model="search"
-        autofocus
+        ref="searchRef"
         debounce="1000"
         :loading="loadingState"
         type="search"
@@ -18,7 +18,7 @@
         <template v-slot:append>
           <q-icon name="search" />
         </template>
-        <q-menu fit auto-close v-model="menu">
+        <q-menu fit auto-close @focus="this.$refs.searchRef.focus()"  v-model="menu">
           <q-list
             v-for="(movies, i) in searchResult"
             :key="i"
@@ -29,18 +29,15 @@
                 <q-item-label>{{ movies.title }}</q-item-label>
                 <q-item-label caption>{{ movies.description }}</q-item-label>
               </q-item-section>
-              <q-item-section side top>
-                <q-badge color="primary" :label="movies.rating" />
-              </q-item-section>
             </q-item>
           </q-list>
         </q-menu>
       </q-input>
       <div class="col-1 text-center" v-if="movie.poster">
-        <q-img
+        <img
           :src="movie.poster"
-          style="height: 150px; max-width: 150px"
-        ></q-img>
+          style="display: inline-flex; width: 40%; height: 40%"
+        >
       </div>
       <!--      Title-->
       <q-input
@@ -60,6 +57,7 @@
         type="text"
         class="col"
         filled
+        :autofocus="!movieStore.$state.edit"
         label="Physical Location *"
         v-model="physicalProperties.physicalLocation"
         :rules="[(val) => !!val || 'Field is required']"
@@ -117,6 +115,7 @@ export default defineComponent({
   setup() {
     const movieStore = useMovieStore();
     const search = ref(movieStore.$state.search);
+    const searchRef=ref('');
     const $q = useQuasar();
     const edit = ref(movieStore.$state.edit);
     const id = ref(null);
@@ -146,6 +145,7 @@ export default defineComponent({
     };
     return {
       search,
+      searchRef,
       movieStore,
       menu,
       edit,

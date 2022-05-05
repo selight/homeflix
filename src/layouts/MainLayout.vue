@@ -1,32 +1,28 @@
 <template>
   <q-layout view="lHh lpr lFf">
-    <q-header elevated class="bg-transparent">
+    <q-header class="bg-transparent"
+              style=" backdrop-filter: blur(2px);">
       <q-toolbar dense>
         <q-avatar square>
-          <img alt="homeflix" src="../assets/netflix.png" />
+          <img alt="homeflix" src="../assets/netflix.png" v-on:click="this.$router.push('/')" />
         </q-avatar>
         <q-space />
-        <div class="row justify-evenly q-gutter-lg gt-xs" >
-          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[0]">
-            <span>{{movieStore.categories[0]}}</span>
-          </router-link>
-          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[1]">
-            {{movieStore.categories[1]}}
-          </router-link>
-          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[2]">
-            {{movieStore.categories[2]}}
-          </router-link>
-        </div>
+          <div v-for="(cat,i) in movieStore.categories.slice(0,3)" :key="i" class="row justify-evenly text-caption gt-xs">
+            <q-btn flat class="col text-white text-subtitle2"  :to="'#'+cat">
+              {{cat}}
+            </q-btn>
+          </div>
         <q-toolbar-title> </q-toolbar-title>
         <q-input
           dense
           standout
           v-model="movieStore.$state.search"
+          ref="search"
           input-class="text-right"
           debounce="500"
           :loading="loadingState"
           class="q-ml-md"
-        >
+         :model-value="movieStore.$state.search">
           <template v-slot:append>
             <q-icon v-if="movieStore.$state.search === ''" name="search" />
             <q-icon
@@ -37,7 +33,7 @@
             />
           </template>
         </q-input>
-        <q-menu fit auto-close v-if="menu" v-model="menu">
+        <q-menu fit auto-close v-if="menu" @focus="this.$refs.search.focus()" v-model="menu">
           <q-list
             v-for="(movies, i) in searchResult"
             :key="i"
@@ -51,10 +47,6 @@
               <q-item-section>
                 <q-item-label>{{ movies.title }}</q-item-label>
                 <q-item-label caption>{{ movies.description }}</q-item-label>
-              </q-item-section>
-
-              <q-item-section side top>
-                <q-badge color="primary" :label="movies.rating" />
               </q-item-section>
             </q-item>
           </q-list>
@@ -84,16 +76,10 @@
         </q-btn>
       </q-toolbar>
       <q-toolbar v-if="movieStore.categories.length" inset class="xs">
-        <div class="row justify-start q-gutter-md text-caption">
-          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[0]">
-            {{movieStore.categories[0]}}
-          </router-link>
-          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[1]">
-            {{movieStore.categories[1]}}
-          </router-link>
-          <router-link class="col text-white text-subtitle2"  :to="'#'+movieStore.categories[2]">
-            {{movieStore.categories[2]}}
-          </router-link>
+        <div v-for="(cat,i) in movieStore.categories.slice(0,3)" :key="i" class="row justify-evenly text-caption">
+          <q-btn flat class="col text-white text-subtitle2"  :to="'#'+cat">
+            {{cat}}
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -112,7 +98,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, computed } from "vue";
+import { defineComponent, ref, watch, computed,nextTick } from "vue";
 import { useAuthStore } from "stores/Auth-store";
 import { useMovieStore } from "stores/Movie-store";
 import AddMovieComponent from "components/addMovieComponent.vue";
@@ -131,6 +117,7 @@ export default defineComponent({
     const text = computed(() => movieStore.$state.search);
     const menus = ref(false);
     const menu = ref(false);
+    const search=ref('');
     const searchResult = ref([]);
     const loadingState = ref(false);
     const detailDialog = ref(false);
@@ -154,6 +141,7 @@ export default defineComponent({
       store,
       menus,
       menu,
+      search,
       movieStore,
       loadingState,
       searchResult,
@@ -188,5 +176,10 @@ export default defineComponent({
       },
     };
   },
+  methods:{
+    searchFocus(){
+      this.$refs.search.focus();
+    }
+  }
 });
 </script>
