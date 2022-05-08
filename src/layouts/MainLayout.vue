@@ -179,20 +179,21 @@ export default defineComponent({
         menus.value = true;
       },
       searchResultClick(movies) {
+       console.log('sljfls')
         movieStore
           .getOneMovie(movies.id)
           .then((r) => {
-            if (r.length > 0) {
+            if (r) {
               this.singleMovie = r[0];
               this.detailDialog = true;
-            } else {
-              this.movieStore.$state.movie = movies;
-              this.movieStore.$state.addDialog = true;
-              this.movieStore.$state.edit = false;
             }
           })
           .catch((error) => {
-            console.log(error.response.data);
+          if(error.response.status===404) {
+            this.movieStore.$state.movie = movies;
+            this.movieStore.$state.addDialog = true;
+            this.movieStore.$state.edit = false;
+          }
           });
       },
     };

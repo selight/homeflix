@@ -10,7 +10,8 @@ export const useMovieStore = defineStore('movie', {
       rating:null,
       poster:null,
       backDrop: '',
-      release_date:''
+      release_date:'',
+      trailer:''
     },
     categories:[],
     addDialog:false,
@@ -51,12 +52,12 @@ export const useMovieStore = defineStore('movie', {
         throw error
       })
     },
-    //get movie detail from tmdb
+    //get movie detail from by tmdb Id
     async getOneMovie(id){
       return await api.get('/movies/details/'+id).then((result)=>{
         return result.data.data
       }).catch((error)=>{
-        return error.response.data.status
+        throw error
       })
     },
     async searchMyMovies(searchTerm){
@@ -83,7 +84,6 @@ export const useMovieStore = defineStore('movie', {
       return  await  api.delete('/movies/'+id).then((response)=>{
         return response.status
       }).catch((error)=>{
-
         return error.response.data.status
       })
     }
