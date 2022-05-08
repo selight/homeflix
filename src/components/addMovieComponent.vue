@@ -201,7 +201,7 @@ export default defineComponent({
       },
       async setMovie(movies) {
         await movieStore.getOneMovie(movies.id).then((r) => {
-          if (r.length > 0) {
+          if (r) {
             movieStore.$state.edit = true;
             id.value = r[0]._id;
             let {
@@ -232,7 +232,9 @@ export default defineComponent({
               backDrop,
               release_date,
             };
-          } else {
+          }
+        }).catch((error)=>{
+          if(error.response.status===404){
             movie.value = movies;
           }
         });
